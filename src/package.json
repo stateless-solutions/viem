@@ -1,5 +1,5 @@
 {
-  "name": "viem",
+  "name": "viem-stateless",
   "description": "TypeScript Interface for Ethereum",
   "version": "2.9.29",
   "type": "module",
@@ -144,11 +144,18 @@
     "ws": "8.13.0"
   },
   "license": "MIT",
-  "homepage": "https://viem.sh",
-  "repository": "wevm/viem",
+  "homepage": "https://stateless.solutions",
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stateless-solutions/viem.git"
+  },
   "authors": [
-    "awkweb.eth",
-    "jxom.eth"
+    "joe@stateless.solutions",
+    "pablo@stateless.solutions"
   ],
   "funding": [
     {
