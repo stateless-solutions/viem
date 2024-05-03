@@ -1,7 +1,7 @@
 name: Release (Canary)
 on:
-  push:
-    branches: [release]
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
         run: |
           jq --arg prop "workspaces" 'del(.[$prop])' package.json > package.tmp.json && rm package.json && cp package.tmp.json package.json && rm package.tmp.json
           cd src
-          npm --no-git-tag-version version 2.9.29-stateless-1
+          npm --no-git-tag-version version "${{ github.ref }}"
           bun ../scripts/updateVersion.ts
 
       - name: Build
