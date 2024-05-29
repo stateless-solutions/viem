@@ -87,21 +87,38 @@ export function getHttpRpcClient(
       try {
         const response = await withTimeout(
           async ({ signal }) => {
+            let result;
+
+            if (Array.isArray(body)) {
+              body.forEach((bodyItem) => {
+                if (bodyItem.method === 'eth_getLogs') {
+                  bodyItem.method = 'eth_getLogsAndBlockRange';
+                }
+              });
+
+              result = stringify(
+                body.map((bodyItem) => ({
+                  jsonrpc: '2.0',
+                  id: bodyItem.id ?? idCache.take(),
+                  ...bodyItem,
+                })),
+              );
+            } else {
+              if (body.method === 'eth_getLogs') {
+                console.log('lo cambie')
+                body.method = 'eth_getLogsAndBlockRange';
+              }
+
+              result = stringify({
+                jsonrpc: '2.0',
+                id: body.id ?? idCache.take(),
+                ...body,
+              });
+            }
+
             const init: RequestInit = {
               ...fetchOptions,
-              body: Array.isArray(body)
-                ? stringify(
-                    body.map((body) => ({
-                      jsonrpc: '2.0',
-                      id: body.id ?? idCache.take(),
-                      ...body,
-                    })),
-                  )
-                : stringify({
-                    jsonrpc: '2.0',
-                    id: body.id ?? idCache.take(),
-                    ...body,
-                  }),
+              body: result,
               headers: {
                 ...headers,
                 'Content-Type': 'application/json',
